@@ -1,0 +1,303 @@
+
+.videoBox{
+  width: 100%;
+}
+
+.videoRightBar{
+  width: 60px;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  height: 50%;
+  
+}
+
+.videoStopButtonView{
+  padding-top:100px;
+  width: 100%;
+  height: 50px;
+  line-height: 200px;
+}
+.videoStopButton{
+  margin-left:18%;
+  width: 80px;
+  height: 40px;
+  float: left;
+  background-color:red;
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 20px;
+  border-radius:10px !important;
+}
+
+.videoStart{
+  position: absolute;
+  width: 80px;
+  height: 40px;
+  left: 50%;
+  margin-left:-40px;
+  background-color:red;
+  top:50%;
+  margin-top:-20px;  
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 20px;
+  border-radius:10px !important;
+
+}
+
+.videoStop{
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  right: 5%;
+  background-color:red;
+  top:5%; 
+  text-align: center;
+  line-height: 40px;
+  color: #fff;
+  font-size: 20px;
+  border-radius:10px !important;
+
+}
+.videoStopView{
+  position: absolute;
+  top:25%;
+  left:0px;
+  width: 100%;
+  text-align: center;
+  height: 100%;
+  background-color: #000;
+  opacity:0.8;
+}
+.videoStopText{
+  height: 40px;
+  line-height: 40px;
+  border:5px solid #fff;
+  color: #fff;
+  
+}
+.videoPoint{
+  top:0px;
+  left: 0px;
+  padding: 10px;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 35px;
+  font-weight: 900;
+  color: #fff;
+}
+.videoIcon{
+  margin-top: 20px;
+  margin-left:10px; 
+  width: 40px;
+  height: 40px;
+  border-radius:10px !important;
+  float: left;
+}
+
+.videoNumber{
+  padding-top:8px; 
+  width: 50px;
+  color: #fff;
+  font-size:12px; 
+  text-align: center;
+}
+.videoDesc{
+  width: 100%;
+  position: absolute;
+  bottom: 0px;
+  left:0px;
+  height:100px;
+  opacity:1;
+  background-color:#000;
+}
+.videoTitle{
+  width: 100%;
+  height:50px;
+  line-height: 50px;
+  color:#fff; 
+  margin-left:20px;
+}
+
+.videoHeader{
+  margin-left:20px; 
+  width: 30px;
+  height: 30px;
+  border-radius:10px !important;
+  float: left;
+}
+
+
+.videoName{
+  float: left;
+  margin-left:10px; 
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  color: #fff;
+}
+
+.controls {
+  position: relative;
+  top: 0%;
+  height: 100%;
+  display: flex;
+}
+.play{
+  width: 40px;
+  height: 40px;
+  flex: 1;
+  position: absolute;
+  background-color: red;
+  top:50%;
+}
+
+.viewLeftButton{
+  width: 40px;
+  height: 60px;
+  left: 0;
+  top: 50%;
+  margin-top:-30px;
+  flex: 1;
+  position: absolute;
+  opacity:0.5;
+  background-color: #c0c0c0;
+  border-radius:6rpx !important;
+}
+.viewRightButton{
+  width: 40px;
+  height: 60px;
+  right: 0;
+  top: 50%;
+  margin-top:-30px;
+  flex: 1;
+  position: absolute;
+  opacity:0.5;
+  background-color: #c0c0c0;
+  border-radius:6rpx !important;
+}
+
+.viewTopButton{
+  
+  width: 60px;
+  height: 40px;
+  right: 50%;
+  top: 0;
+  margin-right:-30px;
+  flex: 1;
+  position: absolute;
+  opacity:0.5;
+  background-color: #c0c0c0;
+  border-radius:6rpx !important;
+
+}
+
+.viewBottomButton{
+ 
+  width: 60px;
+  height: 40px;
+  right: 50%;
+  bottom: 0;
+  margin-right:-30px;
+  flex: 1;
+  position: absolute;
+  opacity:0.5;
+  background-color: #c0c0c0;
+  border-radius:6rpx !important;
+}
+
+.viewNotice{
+  width: 50px;
+  height: 24px;
+  margin-left:-25px;
+  margin-top:-12px;
+  line-height:25px;
+  border-radius:8px !important;
+  color:#fff;
+  padding:4px;
+  flex: 1;
+  position: absolute;
+  text-align:center;
+  background-color: #6739b6 !important;
+  opacity:0.9;
+  left: 50%;
+  top:50%;
+}
+.viewbox{
+  width: 40px;
+  height: 40px;
+  line-height:40px;
+  border-radius:40px !important;
+  background-size:cover;
+  background-position:center;
+  flex: 1;
+  position: absolute;
+  background-color: red;
+  opacity:0.8;
+  left: 2500%;
+  top:2500%;
+}
+
+
+.boxleft{
+  top:50%;
+  margin-top: -20px;
+  right: 50%;
+}
+.boxright{
+  top:50%;
+  margin-top: -20px;
+  left: 50%;
+}
+.boxtop{
+  left: 50%;
+  margin-left: -20px;
+  bottom: 50%;
+}
+.boxbottom{
+  left: 50%;
+  margin-left: -20px;
+  top: 50%;
+}
+.play2 {
+  flex: 1;
+  right: 20%;
+  top:50%;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+}
+.time {
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  line-height: 50px;
+}
+.img {
+  width: 40px;
+  height: 40px;
+  background-color: red;
+  margin: 5px auto;
+}
+.canvas {
+  width: 304px;
+  height: 304px;
+  background-color: #fff;
+}
+
+.image-cnt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.cover-image {
+  width: 50px;
+  height: 50px;
+}

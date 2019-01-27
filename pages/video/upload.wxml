@@ -1,0 +1,5 @@
+  <view class="weui-uploader__input-box">
+      <view class="weui-uploader__input" bindtap="chooseImage"></view>
+  </view>
+
+  <button class="weui-btn" type="primary" bindtap="submitForm">提交</button>
