@@ -23,12 +23,17 @@ Page({
   },
   bindDetailTap: function () {
     wx.navigateTo({
-      url: '../detail/index'
+      url: '../detail/index?id=333'
     })
   },
 
   
   onLoad: function () {
+
+    wx.showShareMenu({
+      withShareTicket: true
+    })
+    
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,

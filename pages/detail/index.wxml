@@ -46,6 +46,27 @@
 
  <cover-view bindtap="play" hidden="{{hiddenPlaying}}" class="videoStart">开始</cover-view>
 
+ <button open-type="share" bindtap="createRoomSocket" hidden="{{hiddenPlaying}}" class="videoInvite">邀请好友</button>
+
+  <cover-view class="videoWaitBox" hidden="{{hiddenNotWait}}" >
+    <cover-view class="videoWaitBack" ></cover-view>
+    <cover-view class="videoWait" >
+      <cover-view class="videoWaitUser" >
+        <cover-image class="videoWaitIcon" src="{{userInfo.avatarUrl}}"></cover-image>
+        <cover-view class="videoWaitName">用户名</cover-view>
+      </cover-view>
+      <cover-view class="videoWaitUser" >
+        <cover-image class="videoWaitIcon" src="{{userInfo.avatarUrl}}"></cover-image>
+        <cover-view class="videoWaitName">{{userInfo.nickName}}</cover-view>
+      </cover-view>
+      <cover-view class="videoWaitCannel" >
+       <cover-view  bindtap="videoWaitCannel" hidden="{{!hiddenTimer}}" class="videoWaitButton">不等了</cover-view>
+       <cover-view  hidden="{{hiddenTimer}}" class="videoWaitButton">倒计时：{{countDownNum}}</cover-view>
+      </cover-view>
+       
+    </cover-view>
+  </cover-view>
+
   <cover-view class="videoStopView" hidden="{{hiddenPlayingAndInit}}">
     <cover-view class="videoStopText">暂停</cover-view>
     <cover-view class="videoStopButtonView">

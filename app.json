@@ -1,7 +1,8 @@
 {
   "pages":[
-    "pages/index/index",
+
     "pages/detail/index",
+    "pages/index/index",
     "pages/test/test",
     "pages/video/upload",
    
