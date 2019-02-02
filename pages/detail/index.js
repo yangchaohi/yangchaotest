@@ -2,17 +2,27 @@ const app = getApp()
 const socket = require('../js/socket.js')
 Page({
   data: {
+    roomId:0,
     isSinglePlay:true,
     timer: '',
     countDownNum:5,
     hiddenTimer:true,
     userInfo: {},
+    createRoomLock:false,
+    //默认提示隐藏
     noticeHidden: true,
-    hiddenStop: true,
-    hiddenPlayingAndInit: true,
-    hiddenInit: true,
-    noticeHidden: true,
-    hiddenNotWait:true,
+    //刚进入或初始化
+    videoInit: true,
+    //暂停
+    videoPause: false,
+    //视频结束
+    videoEnd: false,
+    //视频播放中
+    videoPlay: false,
+    //是否等待用户加入中
+    isWait:false,
+    otherEnd:false,
+    otherPoint:0,
     waitUserPic: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4001431513,4128677135&fm=27&gp=0.jpg",
     waitUserName: "???",
   },
@@ -59,9 +69,33 @@ Page({
         that.createRoomBack(data);
       } else if (status =='matched'){
         that.matchedRoomAndStart(data);
+      } else if (status == 'uppoint') {
+        that.updateOtherPoint(data);
+      } else if (status == 'playend') {
+        that.updatePlayWinInfo(data);
       }
+
     });
 
+  },
+  //更新比赛两个的积分还有提示等等结束数据
+  updatePlayWinInfo(data) {
+    console.log("updatePlayWinInfo");
+    console.log(data);
+    this.setData({ otherEnd: true});
+    this.jiesuan();
+  },
+  //更新其他用户的分数
+  updateOtherPoint(data){
+    console.log("updateOtherPoint");
+    console.log(data);
+    let apiPoint = parseInt(data.data.point);
+    let oldPoint = parseInt(this.data.otherPoint)
+    if (apiPoint > oldPoint || !this.data.otherPoint){
+      this.setData({ otherPoint: apiPoint })
+    }else{
+      console.log("分数有问题 apiPoint:" + apiPoint + " oldPoint:" + oldPoint);
+    }
   },
   //其他用户加入后开始游戏
   matchedRoomAndStart(data) {
@@ -88,39 +122,92 @@ Page({
           //关闭定时器之后，可作其他处理codes go here
           that.videoWaitCannel();
           that.play();
+          //开始播放后同步分数
+          that.updatePointToOther();
           that.setData({ isSinglePlay:false});
         }
       }, 1000)
     });
-
+    //这里还要设置下左上角的两个分数，然后做定时同步
     console.log(data);
+  },
+  //push当前用户给另外的用户(5s触发一次)
+  updatePointToOther() {
+    var that = this;
+    timer: setInterval(function () {
+      that.updatePointSendSocket();
+    }, 5000)
+  }, 
+  //删除定时器
+  removerTimer() {
+    clearInterval(this.data.timer);
   },
   //创建房间后等待其他用户加入
   createRoomBack(data){
     console.log("createRoomBack");
     console.log(data);
+    this.setData({ roomId: data.room_id})
   },
   //创建房间发起socket请求
-  createRoomSocket(){
+  createRoomSocketInit(){
     console.log("createRoomSocket ")
     var that = this;
+    var createRoomLock = this.data.createRoomLock
     if (!app.globalData.openId){
       setTimeout(function () {
         console.log("createRoomSocket retry");
-        that.createRoomSocket();
+        that.createRoomSocketInit();
       },500);
-    }else{
+    } else if (createRoomLock==false){
+      this.setData({ createRoomLock:true})
+      that.createRoomSocket();
+    }
+  },
+  createRoomSocket(){
+    var message = {};
+    message["type"] = "create_room";
+    message["openId"] = app.globalData.openId;
+    message["video_id"] = this.data.params.id;
+    socket.commonSocketMessage(message);
+  },
+  //加入房间消息
+  joinRoomSendSocket(){
+    if (this.data.params.roomId>0){
       var message = {};
-      message["type"] = "create_room";
+      message["type"] = "join_room";
       message["openId"] = app.globalData.openId;
-      message["video_id"] = this.data.params.id;
+      message["room_id"] = this.data.params.roomId;
+      socket.commonSocketMessage(message);
+      this.setData({ roomId: this.data.params.roomId});
+    }
+  },
+  //更新分数消息
+  updatePointSendSocket() {
+    console.log("updatePointSendSocket");
+    if (this.data.roomId > 0) {
+      var message = {};
+      message["type"] = "update_point";
+      message["openId"] = app.globalData.openId;
+      message["room_id"] = this.data.roomId;
+      message["point"] = this.data.point
+      console.log(message);
       socket.commonSocketMessage(message);
     }
   },
+  //播放结束消息
+  playEndSendSocket(){
+    var message = {};
+    message["type"] = "play_end";
+    message["openId"] = app.globalData.openId;
+    message["room_id"] = this.data.roomId;
+    message["point"] = this.data.point
+    socket.commonSocketMessage(message);
+  },
   onReady() {
     console.log("onReady")
-    this.createRoomSocket();
+    this.createRoomSocketInit();
     console.log(this.data.params);
+    this.joinRoomSendSocket();
     this.videoCtx = wx.createVideoContext('myVideo');
     const query = wx.createSelectorQuery().in(this)
     let that  =this;
@@ -158,10 +245,58 @@ Page({
       point:0
     }) 
   },
+ 
+  //视频播放完的事件
+  timeEnd(res){
+    //先考虑多人
+    console.log("video time end");
+    //删除5s一次的定时器
+    this.removerTimer();
+    //发一个当前用户已经完成的消息
+    this.playEndSendSocket();
+    //当前用户播放已经结束
+    this.setData({myEnd: true })
+    //展示出结束页面
+    this.jiesuan();
+    //set值
+    end();
+  },
+  //结算
+  jiesuan(){
+    //多人模式
+    let otherEnd = this.data.otherEnd;
+    let myEnd = this.data.myEnd;
+   
+    let winTitle = "平了";
+    if (otherEnd == false || myEnd == false) {
+      winTitle="结算中";
+    }else{
+      let point = this.data.point;
+      let otherPoint = this.data.otherPoint;
+      if (!point) {
+        point = 0;
+      }
+      if (!otherPoint) {
+        otherPoint = 0;
+      }
+      if (point > otherPoint) {
+        winTitle = "赢了";
+      } else if (point < otherPoint) {
+        winTitle = "输了";
+      }
+    }
+    this.setData({ winTitle: winTitle});
+
+  },
   //视频播放监听
   timeupdate(res){
     var indexi = this.data.indexi;
     //console.log(res.detail.currentTime)
+    //console.log(res.detail.duration)
+    if (res.detail.currentTime > (res.detail.duration-1) ){
+      this.timeEnd(res);
+      return;
+    }
     if (indexi == undefined){
       indexi = 0;
     }
@@ -243,11 +378,13 @@ Page({
   },
   //切换等待提示
   videoWaitShow(isWait){
-    this.setData({ hiddenNotWait: !isWait});
+    this.setData({ isWait: isWait});
   },
   //隐藏等待提示
   videoWaitCannel(){
     this.videoWaitShow(false);
+    //重新生成roomid
+    this.createRoomSocket();
   },
   onShareAppMessage(res){
      //展示等待提示
@@ -256,23 +393,34 @@ Page({
     console.log(res)
     var app = getApp();
     return {
-      title: '自定义转发标题:' + app.globalData.uid + " id:" + this.data.params.id,
+      title: '自定义转发标题:' + this.data.roomId + " id:" + this.data.params.id,
       path: '/page/detail/index?fromuid=' + app.globalData.uid + "&id="+this.data.params.id
     }
+  },
+  end(){
+    this.setData({
+      videoInit: false,
+      videoPlay: false,
+      videoPause: false,
+      videoEnd: true,
+    })
   },
   play() {
     this.videoCtx.play()
     this.setData({
-      hiddenStop: false,
-      hiddenPlaying: true,
-      hiddenPlayingAndInit:true,
-      hiddenInit:false,
+      videoInit: false,
+      videoPlay: true,
+      videoPause: false,
+      videoEnd: false,
     })
   },
   pause() {
     this.videoCtx.pause();
     this.setData({
-      hiddenPlayingAndInit: false,
+      videoInit: false,
+      videoPlay: false,
+      videoPause: true,
+      videoEnd: false,
     })
   },
   restart(){
@@ -289,18 +437,23 @@ Page({
       styleClass: [],
       animationList: [],
       clickedView:0,
+
       //默认兜底参数初始化
       isSinglePlay: true,
       timer: '',
       countDownNum: 5,
       hiddenTimer: true,
       userInfo: {},
-      noticeHidden: true,
-      hiddenStop: true,
-      hiddenPlayingAndInit: true,
-      hiddenInit: true,
-      noticeHidden: true,
-      hiddenNotWait: true,
+      //刚进入或初始化
+      videoInit: true,
+      //暂停
+      videoPause: false,
+      //视频结束
+      videoEnd: false,
+      //视频播放中
+      videoPlay: false,
+      //是否等待中
+      isWait: false,
       waitUserPic: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4001431513,4128677135&fm=27&gp=0.jpg",
       waitUserName: "???",
     })

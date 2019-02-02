@@ -12,15 +12,16 @@
   <cover-view class="controls">
    <cover-image   src="https://image.weilanwl.com/img/square-4.jpg" style="{{styleClass[i]}}"  data-num="{{i}}" class="viewbox" animation="{{animationList[i]}}" wx:key="unique" wx:for-index="i"  wx:for="{{array}}"> </cover-image>
 
-    <cover-view   hidden='{{hiddenStop}}' bindtap="viewclick" data-type="left"   class="viewLeftButton" ></cover-view>
-    <cover-view  hidden='{{hiddenStop}}'  bindtap="viewclick" data-type="right"  class="viewRightButton" ></cover-view>
-    <cover-view  hidden='{{hiddenStop}}'  bindtap="viewclick" data-type="top"  class="viewTopButton" ></cover-view>
-    <cover-view hidden='{{hiddenStop}}'   bindtap="viewclick" data-type="bottom"  class="viewBottomButton" ></cover-view>
+    <cover-view  hidden='{{!videoPlay}}' bindtap="viewclick" data-type="left"   class="viewLeftButton" ></cover-view>
+    <cover-view  hidden='{{!videoPlay}}'  bindtap="viewclick" data-type="right"  class="viewRightButton" ></cover-view>
+    <cover-view  hidden='{{!videoPlay}}'  bindtap="viewclick" data-type="top"  class="viewTopButton" ></cover-view>
+    <cover-view  hidden='{{!videoPlay}}'   bindtap="viewclick" data-type="bottom"  class="viewBottomButton" ></cover-view>
     <cover-view  hidden='{{noticeHidden}}' class="viewNotice" >{{noticeMessgae}}</cover-view>
 
-  <cover-view class="videoPoint">{{point}}
-  </cover-view>
-  <cover-view class="videoDesc"  hidden='{{hiddenPlaying}}'>
+  <cover-view class="videoPoint">{{point}}</cover-view>
+  <cover-view hidden="{{isSinglePlay}}" class="videoPointOther">{{otherPoint}} {{waitUserName}}</cover-view>
+
+  <cover-view class="videoDesc"  hidden='{{videoPlay}}'>
     <cover-view class="videoTitle">
     标题标题标题标题标题标题标题标题
     </cover-view>
@@ -31,7 +32,7 @@
     </cover-view>
     </cover-view>
 
- <cover-view class="videoRightBar"  hidden='{{hiddenPlaying}}'>
+ <cover-view class="videoRightBar"  hidden='{{videoPlay}}'>
     <cover-image class="videoIcon" src="https://image.weilanwl.com/img/square-3.jpg"></cover-image>
     <cover-view class="videoNumber">
     1222
@@ -42,22 +43,22 @@
     </cover-view>
 </cover-view>
 
-<cover-view bindtap="pause" hidden="{{hiddenInit}}" class="videoStop">暂停</cover-view>
+<cover-view bindtap="pause" hidden="{{!videoPlay}}" class="videoStop">暂停</cover-view>
 
- <cover-view bindtap="play" hidden="{{hiddenPlaying}}" class="videoStart">开始</cover-view>
+ <cover-view bindtap="play" hidden="{{!videoInit}}" class="videoStart">开始</cover-view>
 
- <button open-type="share" bindtap="createRoomSocket" hidden="{{hiddenPlaying}}" class="videoInvite">邀请好友</button>
+ <button open-type="share" bindtap="createRoomSocket" hidden="{{!videoInit||isWait}}" class="videoInvite">邀请好友</button>
 
-  <cover-view class="videoWaitBox" hidden="{{hiddenNotWait}}" >
+  <cover-view class="videoWaitBox" hidden="{{!isWait}}" >
     <cover-view class="videoWaitBack" ></cover-view>
     <cover-view class="videoWait" >
       <cover-view class="videoWaitUser" >
         <cover-image class="videoWaitIcon" src="{{userInfo.avatarUrl}}"></cover-image>
-        <cover-view class="videoWaitName">用户名</cover-view>
+        <cover-view class="videoWaitName">{{userInfo.nickName}}</cover-view>
       </cover-view>
       <cover-view class="videoWaitUser" >
-        <cover-image class="videoWaitIcon" src="{{userInfo.avatarUrl}}"></cover-image>
-        <cover-view class="videoWaitName">{{userInfo.nickName}}</cover-view>
+        <cover-image class="videoWaitIcon" src="{{waitUserPic}}"></cover-image>
+        <cover-view class="videoWaitName">{{waitUserName}}</cover-view>
       </cover-view>
       <cover-view class="videoWaitCannel" >
        <cover-view  bindtap="videoWaitCannel" hidden="{{!hiddenTimer}}" class="videoWaitButton">不等了</cover-view>
@@ -67,11 +68,20 @@
     </cover-view>
   </cover-view>
 
-  <cover-view class="videoStopView" hidden="{{hiddenPlayingAndInit}}">
+  <cover-view class="videoStopView" hidden="{{!videoPause}}">
     <cover-view class="videoStopText">暂停</cover-view>
     <cover-view class="videoStopButtonView">
       <cover-view bindtap="play"  class="videoStopButton">继续</cover-view>
       <cover-view bindtap="restart" class="videoStopButton">重玩</cover-view>
+    </cover-view>
+  </cover-view>
+  
+
+  <cover-view class="videoEndView" hidden='{{!videoEnd}}'>
+    <cover-view class="videoStopText">结算 {{winTitle}}</cover-view>
+    <cover-view class="videoStopButtonView">
+      <cover-view bindtap="closeEndView"  class="videoStopButton">关闭</cover-view>
+      <cover-view bindtap="restart" class="videoStopButton">再来一次</cover-view>
     </cover-view>
   </cover-view>
   
