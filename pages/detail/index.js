@@ -2,6 +2,11 @@ const app = getApp()
 const socket = require('../js/socket.js')
 Page({
   data: {
+    videoPause:true,
+    //config
+    viewBoxWidth:44,
+    viewBoxHeight:44,
+    sideHeight:44,
     roomId:0,
     isSinglePlay:true,
     timer: '',
@@ -99,6 +104,10 @@ Page({
   },
   //其他用户加入后开始游戏
   matchedRoomAndStart(data) {
+    if (!this.data.isWait){
+      console.log("not wait");
+       return;
+    }
     let name = data.other_user.name;
     let pic = data.other_user.pic;
     var that = this;
@@ -120,7 +129,7 @@ Page({
           //因为timer是存在data里面的，所以在关掉时，也要在data里取出后再关闭
           clearInterval(that.data.timer);
           //关闭定时器之后，可作其他处理codes go here
-          that.videoWaitCannel();
+          that.videoWaitShow(false);
           that.play();
           //开始播放后同步分数
           that.updatePointToOther();
@@ -134,13 +143,14 @@ Page({
   //push当前用户给另外的用户(5s触发一次)
   updatePointToOther() {
     var that = this;
-    timer: setInterval(function () {
+    that.data.timer= setInterval(function () {
       that.updatePointSendSocket();
     }, 5000)
   }, 
   //删除定时器
   removerTimer() {
-    clearInterval(this.data.timer);
+    var that = this;
+    clearInterval(that.data.timer);
   },
   //创建房间后等待其他用户加入
   createRoomBack(data){
@@ -157,7 +167,7 @@ Page({
       setTimeout(function () {
         console.log("createRoomSocket retry");
         that.createRoomSocketInit();
-      },500);
+      },100000);
     } else if (createRoomLock==false){
       this.setData({ createRoomLock:true})
       that.createRoomSocket();
@@ -209,31 +219,36 @@ Page({
     console.log(this.data.params);
     this.joinRoomSendSocket();
     this.videoCtx = wx.createVideoContext('myVideo');
+    this.videoCtx.pause()
+    this.videoCtx.requestFullScreen();
     const query = wx.createSelectorQuery().in(this)
     let that  =this;
 
-    wx.getSystemInfo({
+    /*wx.getSystemInfo({
       success: function (res) {
+        console.log("getSystemInfo")
+        console.log(res);
         that.setData({
           videoHeight: (res.windowHeight),
           //videoHeight: (res.screenHeight),
         })
       }
-    })
+    })*/
 
     query.select('#myVideo').boundingClientRect(function (res) {
       that.setData({
         videoWidth: res.width,
+        videoHeight:res.height,
       })
     }).exec()
     //初始化行动点
-    var action = [{ "time": "2.4", "type": "left" },
-      { "time": "3.4", "type": "right" },
+    var action = [{ "time": "1.4", "type": "left" },
+      { "time": "2.4", "type": "right" },
+      { "time": "3.4", "type": "top" },
       { "time": "4.4", "type": "top" },
-      { "time": "5.4", "type": "bottom" },
+      { "time": "5.4", "type": "top" },
       { "time": "6.4", "type": "top" },
       { "time": "7.4", "type": "top" },
-      { "time": "8.4", "type": "top" },
     ];
 
     var animationList = []
@@ -245,7 +260,9 @@ Page({
       point:0
     }) 
   },
- 
+  closeEndView(){
+    this.restart();
+  },
   //视频播放完的事件
   timeEnd(res){
     //先考虑多人
@@ -259,14 +276,14 @@ Page({
     //展示出结束页面
     this.jiesuan();
     //set值
-    end();
+    this.end();
   },
   //结算
   jiesuan(){
     //多人模式
     let otherEnd = this.data.otherEnd;
     let myEnd = this.data.myEnd;
-   
+    console.log("jiesuan: otherEnd:" + otherEnd + " myEnd:" + myEnd);
     let winTitle = "平了";
     if (otherEnd == false || myEnd == false) {
       winTitle="结算中";
@@ -291,8 +308,8 @@ Page({
   //视频播放监听
   timeupdate(res){
     var indexi = this.data.indexi;
-    //console.log(res.detail.currentTime)
-    //console.log(res.detail.duration)
+    console.log(res.detail.currentTime)
+    console.log(res.detail.duration)
     if (res.detail.currentTime > (res.detail.duration-1) ){
       this.timeEnd(res);
       return;
@@ -302,7 +319,10 @@ Page({
     }
     var videoWidth = this.data.videoWidth;
     var videoHeight = this.data.videoHeight;
-   
+    let viewBoxWidth = this.data.viewBoxWidth;
+    let viewBoxHeight = this.data.viewBoxHeight;
+
+
     let that = this;
     for (var i = indexi; i < this.data.array.length;i++){
 
@@ -311,26 +331,28 @@ Page({
         this.setData({
           indexi: i+1
         });
-        //console.log("set index i" + i);
+        console.log("set index i" + i);
         let animationList = this.data.animationList
         let styleClass = this.data.styleClass
         let MOU = this.createAni()
         var centerWidth = videoWidth / 2;
         var centerheight = videoHeight / 2;
-          var style = "left:" + (centerWidth - 20) + "px;" + "top:" + (centerheight - 20)+"px;";
-          
-          if (this.data.array[i]["type"]=="left"){
-            MOU.translate(-(videoWidth / 2 -59), 0).step()
-          } else if (this.data.array[i]["type"] == "right") {
-            MOU.translate(videoWidth / 2 - 59, 0).step()
-          } else if (this.data.array[i]["type"] == "top") {
-            MOU.translate(0, -(videoHeight / 2 - 59)).step()
-          } else if (this.data.array[i]["type"] == "bottom") {
-            MOU.translate(0, (videoHeight / 2 - 59)).step()
-          }
-          MOU.rotate(180).step({ duration:100})
-          animationList[i] = MOU.export()
-          styleClass[i] = style;
+        var sideWay = this.data.sideHeight + (viewBoxHeight/2);
+        var style = "left:" + (centerWidth - (viewBoxWidth / 2)) + "px;" + "top:" + (centerheight - (viewBoxHeight/2))+"px;";
+        console.log("style:" + style)
+
+        if (this.data.array[i]["type"]=="left"){
+          MOU.translate(-(videoWidth / 2 - sideWay), 0).step()
+        } else if (this.data.array[i]["type"] == "right") {
+          MOU.translate(videoWidth / 2 - sideWay, 0).step()
+        } else if (this.data.array[i]["type"] == "top") {
+          MOU.translate(0, -(videoHeight / 2 - sideWay)).step()
+        } else if (this.data.array[i]["type"] == "bottom") {
+          MOU.translate(0, (videoHeight / 2 - sideWay)).step()
+        }
+        //MOU.rotate(180).step({ duration:100})
+        animationList[i] = MOU.export()
+        styleClass[i] = style;
         console.log("animationList size:" + animationList.length)
         console.log(styleClass)
         var isave = i;
@@ -387,6 +409,7 @@ Page({
     this.createRoomSocket();
   },
   onShareAppMessage(res){
+    console.log("onShareAppMessage")
      //展示等待提示
     this.videoWaitShow(true);
     // 来自页面内转发按钮
@@ -406,6 +429,7 @@ Page({
     })
   },
   play() {
+    console.log("video play");
     this.videoCtx.play()
     this.setData({
       videoInit: false,
@@ -415,6 +439,7 @@ Page({
     })
   },
   pause() {
+    console.log("video pause");
     this.videoCtx.pause();
     this.setData({
       videoInit: false,
@@ -424,6 +449,8 @@ Page({
     })
   },
   restart(){
+    
+    console.log("video restart");
     this.videoCtx.seek(0);
     //清理积分
     this.init();

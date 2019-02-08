@@ -103,7 +103,7 @@ App({
   getNeededUserInfoWidthInfo: function (code, enc, iv) {
       var that = this;
 　　　　wx.request({
-      url: 'http://yc.com:2017/?c=api/oauth/initWeixin',
+      url: 'http://47.94.147.93/?c=api/oauth/initWeixin',
   　　　　　　method: 'POST',
             header: {
               'content-type': 'application/x-www-form-urlencoded' // 默认值

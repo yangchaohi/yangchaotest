@@ -1,8 +1,33 @@
+page {
+  width: 100%;
+  height: 100%;
+}
+
+.page-body {
+  width: 100%;
+  height: 100%;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: block;
+}
+
 
 .videoBox{
   width: 100%;
 }
-
+.videoWaitBox{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top:0px;
+  left: 0px;
+}
 .videoRightBar{
   width: 60px;
   position: absolute;
@@ -11,70 +36,65 @@
   height: 50%;
 }
 
-.videoStopButtonView{
-  padding-top:100px;
-  width: 100%;
-  height: 50px;
-  line-height: 200px;
-}
 .videoStopButton{
   margin-left:18%;
-  width: 80px;
-  height: 40px;
+  width: 90px;
+  height: 50px;
+  font-size: 25px;
+  font-weight: 900;
   float: left;
   background-color:red;
   text-align: center;
-  line-height: 40px;
+  line-height: 50px;
   color: #fff;
-  font-size: 20px;
   border-radius:10px !important;
 }
 
 .videoInvite{
   position: absolute;
-  width: 80px;
-  height: 40px;
-  left: 50%;
-  margin-left:-40px;
-  background-color:red;
-  top:30%;
-  margin-top:-20px;  
+  width: 100px;
+  height: 30px;
+  right: 5%;
+  top:5%;
+  background-color:rgb(27, 96, 223);
   text-align: center;
-  line-height: 40px;
+  line-height: 30px;
   color: #fff;
-  font-size: 20px;
+  font-size: 15px;
   border-radius:10px !important;
 
 }
 .videoStart{
   position: absolute;
-  width: 80px;
-  height: 40px;
+ 
   left: 50%;
-  margin-left:-40px;
+  margin-left:-45px;
   background-color:red;
   top:50%;
-  margin-top:-20px;  
+  margin-top:-25px;  
   text-align: center;
-  line-height: 40px;
+  line-height: 50px;
   color: #fff;
-  font-size: 20px;
+  width: 90px;
+  height: 50px;
+  font-size: 25px;
+  font-weight: 900;
   border-radius:10px !important;
 
 }
 
-.videoStop{
+.videoPause{
   position: absolute;
   width: 60px;
-  height: 40px;
+  height: 30px;
   right: 5%;
   background-color:red;
   top:5%; 
   text-align: center;
-  line-height: 40px;
+  line-height: 30px;
   color: #fff;
-  font-size: 20px;
-  border-radius:10px !important;
+  font-size: 15px;
+  border-radius:1px !important;
 
 }
 
@@ -86,19 +106,21 @@
   height: 100%;
   background-color: #000;
   opacity:0.5;
+  border-radius:1px !important;
 }
 
 .videoWait{
   position: absolute;
   width: 200px;
   left: 50%;
-  margin-left:-100px; 
+  margin-left:-110px; 
   top:50%;
   margin-top:-50px; 
   text-align: center;
   height: 140px;
   background-color: rgb(16, 56, 167);
   opacity:1;
+  margin: 0xp 20px 0px 20px;
 }
 
 .videoWaitCannel{
@@ -110,7 +132,7 @@
   margin:0 auto;
   width: 60px;
   height: 30px;
-  background-color:green;
+  background-color:red;
   text-align: center;
   line-height: 30px;
   color: #fff;
@@ -119,17 +141,27 @@
 }
 
 .videoWaitUser{
-  width: 100px;
+  position: relative;
+  width: 50%;
   height: 100px;
   float: left;
 }
 .videoWaitIcon{
-  margin:25px 25px 0px 25px; 
+  margin:auto; 
+  margin-top:25px;
   width: 50px;
   height: 50px;
 }
+.videoWaitReady{
+  position: absolute;
+  left:50px;
+  top: 50px;
+  width: 25px;
+  height: 25px;
+  background-color: #ccc;
+}
 .videoWaitName{
-  width: 100px;
+  width: 100%;
   height: 25px;
   line-height:25px;
   text-align: center;
@@ -144,25 +176,41 @@
   text-align: center;
   height: 100%;
   background-color: #000;
-  opacity:0.8;
+  opacity:1;
 }
 .videoStopView{
   position: absolute;
-  top:25%;
+  top:0px;
   left:0px;
   width: 100%;
   text-align: center;
   height: 100%;
   background-color: #000;
-  opacity:0.8;
+  opacity:0.5;
+  border-radius:6rpx !important;
 }
+
 .videoStopText{
+  width: 100%;
   height: 40px;
   line-height: 40px;
-  border:5px solid #fff;
+  border-top:5px solid #fff;
+  border-bottom:5px solid #fff;
   color: #fff;
-  
 }
+.videoStopTop{
+  height: 20%;
+  width: 100%;
+}
+
+.videoStopButtonView{
+  top:50%;
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  line-height: 200px;
+}
+
 .videoPoint{
   position: absolute;
   top:0px;
@@ -191,14 +239,31 @@
   margin-top: 20px;
   margin-left:10px; 
   width: 40px;
-  height: 40px;
+  height: 35px;
   border-radius:10px !important;
   float: left;
 }
 
+
+.viewboxTest{
+  width: 80px;
+  height: 50px;
+  line-height:40px;
+  border:2px solid #fff;
+  border-radius:5px !important;
+  background-size:cover;
+  background-position:center;
+  flex: 1;
+  position: absolute;
+  background-color: red;
+  opacity:1;
+  left: 20%;
+  top:20%;
+}
+
 .videoNumber{
   padding-top:8px; 
-  width: 50px;
+  width: 100%;
   color: #fff;
   font-size:12px; 
   text-align: center;
@@ -255,11 +320,12 @@
 }
 
 .viewLeftButton{
+  border: 2px solid #fff;
   width: 40px;
   height: 60px;
   left: 0;
   top: 50%;
-  margin-top:-30px;
+  margin-top:-32px;
   flex: 1;
   position: absolute;
   opacity:0.5;
@@ -267,11 +333,12 @@
   border-radius:6rpx !important;
 }
 .viewRightButton{
+  border: 2px solid #fff;
   width: 40px;
   height: 60px;
   right: 0;
   top: 50%;
-  margin-top:-30px;
+  margin-top:-32px;
   flex: 1;
   position: absolute;
   opacity:0.5;
@@ -280,27 +347,25 @@
 }
 
 .viewTopButton{
-  
+  border: 2px solid #fff;
   width: 60px;
   height: 40px;
   right: 50%;
   top: 0;
-  margin-right:-30px;
-  flex: 1;
+  margin-right:-32px;
   position: absolute;
-  opacity:0.5;
   background-color: #c0c0c0;
   border-radius:6rpx !important;
-
+  opacity:0.5;
 }
 
 .viewBottomButton{
- 
+  border: 2px solid #fff;
   width: 60px;
   height: 40px;
   right: 50%;
   bottom: 0;
-  margin-right:-30px;
+  margin-right:-32px;
   flex: 1;
   position: absolute;
   opacity:0.5;
@@ -326,10 +391,11 @@
   top:50%;
 }
 .viewbox{
+  border:2px solid #fff;
   width: 40px;
   height: 40px;
   line-height:40px;
-  border-radius:40px !important;
+  border-radius:10px !important;
   background-size:cover;
   background-position:center;
   flex: 1;
