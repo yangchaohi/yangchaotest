@@ -1,3 +1,43 @@
+
+<view bindtap='showTalkBox' class="viewTalkToggle">
+  <image  class="viewTalkToggleImg" src="../../images/comment.png"></image>
+</view>
+
+<view bindtap='showTalkBox' hidden="{{!hiddenTalkBox||noPreMessage}}" class="viewTalkPreView">
+  <view wx:key="{{index}}"  wx:for="{{talkMessagePreView}}">
+          <view class="viewTalkItem">{{item.message}}</view>
+  </view>
+</view>
+
+<view hidden="{{hiddenTalkBox}}" class='viewTalkBox'>
+  <view class="viewTalkSend">
+    <block>
+      <input class="viewTalkInput" type="text" bindinput ="talkInput" value='{{inputValue}}' focus='{{focus}}' bindfocus="focus" confirm-type="done" placeholder="" />
+      <view bindtap="sendTalkMessage" class='viewTalkButton'>发送</view>
+      <view bindtap='hiddenTalkBox' class='viewTalkClose'></view>
+    </block>
+  </view>
+
+  <scroll-view class="viewTalkList" scroll-y="true" scroll-with-animation scroll-top="{{scrollTop}}">
+    <block>
+      <view class="viewTalkItem ">[happy啦啦]:2222哈哈哈哈哈哈哈哈222222332哈哈哈哈哈</view>
+    </block>
+     <block>
+      <view class="viewTalkItem viewTalkOwner">[happy啦啦x]:2222哈哈哈哈哈哈哈哈222222332哈哈哈哈哈</view>
+    </block>
+     <block>
+      <view wx:key="{{index}}"  wx:for="{{talkMessage}}">
+          <view wx:if="{{item.isOwner==true}}" class="viewTalkItem viewTalkOwner">-{{item.message}}</view>
+          <view wx:else class="viewTalkItem">{{item.message}}</view>
+      </view>
+    </block>
+  </scroll-view>
+</view>
+
+
+
+
+
 <!--index.wxml-->
 <view class="container">
   <view class="userinfo">

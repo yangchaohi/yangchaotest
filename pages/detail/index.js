@@ -236,6 +236,7 @@ Page({
     })*/
 
     query.select('#myVideo').boundingClientRect(function (res) {
+      console.log("res.width:" + res.width + " res.height:" + res.height)
       that.setData({
         videoWidth: res.width,
         videoHeight:res.height,
@@ -307,6 +308,11 @@ Page({
   },
   //视频播放监听
   timeupdate(res){
+    const query = wx.createSelectorQuery().in(this)
+    query.select('#myVideo').boundingClientRect(function (res) {
+      console.log("timeupdate res.width:" + res.width + " res.height:" + res.height);
+    }).exec()
+
     var indexi = this.data.indexi;
     console.log(res.detail.currentTime)
     console.log(res.detail.duration)

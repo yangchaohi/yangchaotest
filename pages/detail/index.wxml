@@ -19,8 +19,11 @@
     <cover-view  hidden='{{!videoPlay}}'   bindtap="viewclick" data-type="bottom"  class="viewBottomButton" ></cover-view>
     <cover-view  hidden='{{noticeHidden}}' class="viewNotice" >{{noticeMessgae}}</cover-view>
 
+<cover-view hidden='{{!videoPlay}}' class='viewPointBox'>
   <cover-view class="videoPoint">{{point}}</cover-view>
-  <cover-view hidden="{{isSinglePlay}}" class="videoPointOther">{{otherPoint}} {{waitUserName}}</cover-view>
+  <cover-view   hidden="{{isSinglePlay}}" class="videoPoint">{{otherPoint}} {{waitUserName}}</cover-view>
+</cover-view>
+
 
   <cover-view class="videoDesc"  hidden='{{videoPlay}}'>
     <cover-view class="videoTitle">

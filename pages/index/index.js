@@ -1,9 +1,12 @@
 //index.js
 //获取应用实例
 const app = getApp()
-
+const socket = require('../js/socket.js')
 Page({
   data: {
+    talkMessage:[],
+    talkMessagePreView:[],
+    noPreMessage: true,
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
@@ -26,10 +29,8 @@ Page({
       url: '../detail/index?id=333'
     })
   },
-
   
   onLoad: function () {
-
     wx.showShareMenu({
       withShareTicket: true
     })
@@ -68,5 +69,68 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
-  }
+  },
+  onShow: function () {
+    let that = this;
+    wx.onSocketMessage(function (res) {
+      console.log("onSocketMessage in common");
+      let data = JSON.parse(res.data);
+      let status = data['status'];
+      if (status == 'talkMessage') {
+        that.addTalkMessage(data);
+      }
+    });
+  },
+  addTalkMessage(data) {
+    let talkMessage = this.data.talkMessage;
+    var that = this;
+    if (data.fromUid == app.globalData.uid) {
+      data.isOwner = true;
+    }
+    talkMessage.push(data);
+
+    let talkMessagePreView = this.data.talkMessagePreView;
+    let talkMessagePreViewNew = [];
+    if (talkMessagePreView){
+      talkMessagePreViewNew.push(talkMessagePreView[talkMessagePreView.length-1])
+    }
+    talkMessagePreViewNew.push(data);
+    setTimeout(function () {
+      that.setData({ talkMessagePreView: [],
+        noPreMessage:true
+        });
+    }, 3000);
+    this.setData({
+      talkMessage: talkMessage,
+      scrollTop: 1000 * talkMessage.length,
+      talkMessagePreView: talkMessagePreViewNew,
+      noPreMessage: false
+    })
+    console.log(talkMessage);
+  },
+  talkInput(e){
+    this.setData({
+      sendMessage: e.detail.value
+    })
+  },
+  hiddenTalkBox(){
+    this.setData({ hiddenTalkBox:true});
+  },
+  showTalkBox(){
+    this.setData({ hiddenTalkBox: false });
+  },
+  sendTalkMessage() {
+    var message = {};
+    if (!this.data.sendMessage){
+      return;
+    }
+    message["type"] = "talkall";
+    message["openId"] = app.globalData.openId;
+    message["message"] = this.data.sendMessage;
+    socket.commonSocketMessage(message);
+    this.setData({
+      'inputValue': '',
+       sendMessage:null,
+    })
+  },
 })

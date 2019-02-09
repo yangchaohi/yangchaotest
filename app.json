@@ -1,11 +1,8 @@
 {
   "pages":[
-
-    "pages/detail/index",
     "pages/index/index",
-    "pages/test/test",
+    "pages/detail/index",
     "pages/video/upload",
-   
     "pages/logs/logs"
    
   ],
