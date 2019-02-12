@@ -10,6 +10,7 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
+    hiddenTalkBox:true,
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
@@ -82,55 +83,18 @@ Page({
     });
   },
   addTalkMessage(data) {
-    let talkMessage = this.data.talkMessage;
-    var that = this;
-    if (data.fromUid == app.globalData.uid) {
-      data.isOwner = true;
-    }
-    talkMessage.push(data);
-
-    let talkMessagePreView = this.data.talkMessagePreView;
-    let talkMessagePreViewNew = [];
-    if (talkMessagePreView){
-      talkMessagePreViewNew.push(talkMessagePreView[talkMessagePreView.length-1])
-    }
-    talkMessagePreViewNew.push(data);
-    setTimeout(function () {
-      that.setData({ talkMessagePreView: [],
-        noPreMessage:true
-        });
-    }, 3000);
-    this.setData({
-      talkMessage: talkMessage,
-      scrollTop: 1000 * talkMessage.length,
-      talkMessagePreView: talkMessagePreViewNew,
-      noPreMessage: false
-    })
-    console.log(talkMessage);
+    socket.addTalkMessage(this,data);
   },
   talkInput(e){
-    this.setData({
-      sendMessage: e.detail.value
-    })
+    socket.talkInput(this, e);
   },
   hiddenTalkBox(){
-    this.setData({ hiddenTalkBox:true});
+    socket.hiddenTalkBox(this);
   },
   showTalkBox(){
-    this.setData({ hiddenTalkBox: false });
+    socket.showTalkBox(this);
   },
   sendTalkMessage() {
-    var message = {};
-    if (!this.data.sendMessage){
-      return;
-    }
-    message["type"] = "talkall";
-    message["openId"] = app.globalData.openId;
-    message["message"] = this.data.sendMessage;
-    socket.commonSocketMessage(message);
-    this.setData({
-      'inputValue': '',
-       sendMessage:null,
-    })
+    socket.sendTalkMessage(this);
   },
 })

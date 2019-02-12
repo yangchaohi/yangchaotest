@@ -63,7 +63,9 @@ App({
       that.globalData.socketOpen = true;
       console.log("onSocketOpen");
       var app = getApp();
-      that.sendSocketMessage(app.globalData.openId);
+      if (app.globalData.openId){
+        that.sendSocketMessage(app.globalData.openId);
+      }
     })
 
     wx.onSocketMessage(function (res) {
@@ -103,7 +105,7 @@ App({
   getNeededUserInfoWidthInfo: function (code, enc, iv) {
       var that = this;
 　　　　wx.request({
-      url: 'http://47.94.147.93/?c=api/oauth/initWeixin',
+        url: 'http://' + this.globalData.doamin+'/?c=api/oauth/initWeixin&debug=true',
   　　　　　　method: 'POST',
             header: {
               'content-type': 'application/x-www-form-urlencoded' // 默认值
@@ -130,6 +132,7 @@ App({
   globalData: {
     userInfo: null,
     uid:0,
-    socketOpen:false
+    socketOpen:false,
+    doamin:"47.94.147.93"
   }
 })

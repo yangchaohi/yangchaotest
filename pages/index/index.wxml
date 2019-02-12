@@ -1,4 +1,4 @@
-
+<!--talk wxml-->
 <view bindtap='showTalkBox' class="viewTalkToggle">
   <image  class="viewTalkToggleImg" src="../../images/comment.png"></image>
 </view>
@@ -33,7 +33,7 @@
     </block>
   </scroll-view>
 </view>
-
+<!--talk wxml end-->
 
 
 
@@ -44,12 +44,19 @@
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text  bindtap="bindTestTap" class="userinfo-nickname">{{userInfo.nickName}}</text>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
 
-       <text  bindtap="bindDetailTap" class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+    <!--经验等级-->
+    <view class="user-motto">当前等级 12 全站第几？ </view>
+    <view class="user-motto">经验值:3600(今天+300)</view>
+    <!--历史记录-->
+    <view class="user-motto">投稿的游戏</view>
+    <view class="user-motto">喜欢玩的视频</view>
+    <view class="user-motto">上次匹配：xxxx</view>
+    <view class="user-motto">上次玩的视频：xxxx</view>
+     <!--发现性-->
+     <view class="user-motto">30人等待匹配中</view>
+    <view class="user-motto">30最新视频更细</view>
 </view>

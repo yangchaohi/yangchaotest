@@ -1,0 +1,52 @@
+.img_item {
+  width: 48%;
+  margin: 1%;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.viewBox{
+  position: relative;
+  margin-bottom: 5px;
+  padding: 3px;
+  border:2px solid #eee;
+  border-radius: 5px;
+}
+
+.viewTitle{
+  font-size: 13px;
+  margin: 3px;
+}
+
+.viewInfo{
+   width: 100%;
+}
+
+.viewUser{
+  color:#666;
+  width: 60%;
+  height: 20px;
+  font-size: 13px;
+}
+
+.viewLike{
+  color:red;
+  vertical-align: middle;
+  position: absolute;
+  bottom:0px;
+  z-index: 100;
+  right: 5px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 13px;
+}
+
+
+.viewLike::before {
+    content: "\2665";
+}
+.viewLikeIcon{
+  vertical-align: middle;
+  width: 13px;
+  height: 13px; 
+}

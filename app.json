@@ -1,15 +1,51 @@
 {
   "pages":[
+    "pages/video/upload",
+    "pages/list/index",
     "pages/index/index",
     "pages/detail/index",
-    "pages/video/upload",
+    "pages/match/index",
     "pages/logs/logs"
    
   ],
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "WeChat",
+    "navigationBarTitleText": "喵爪",
     "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/index_i.png",
+        "selectedIconPath": "images/index_s.png"
+      },
+      {
+        "pagePath": "pages/list/index",
+        "text": "发现",
+        "iconPath": "images/find_i.png",
+        "selectedIconPath": "images/find_s.png"
+      },
+      {
+        "pagePath": "pages/video/upload",
+        "text": "投稿",
+        "iconPath": "images/down_i.png",
+        "selectedIconPath": "images/down_s.png"
+      },
+      {
+        "pagePath": "pages/match/index",
+        "text": "匹配",
+        "iconPath": "images/pipei_i.png",
+        "selectedIconPath": "images/pipei_s.png"
+      },
+      {
+        "pagePath": "pages/detail/index",
+        "text": "随便看",
+        "iconPath": "images/rand_i.png",
+        "selectedIconPath": "images/rand_s.png"
+      }
+    ]
   }
 }

@@ -1,5 +1,20 @@
-  <view class="weui-uploader__input-box">
-      <view class="weui-uploader__input" bindtap="chooseImage"></view>
+
+<form bindsubmit="formSubmit">
+  <view class="cu-form-group margin-top">
+    <view class='title'>视频标题</view>
+    <input placeholder="最长50字" maxlength="50" value="{{title}}" class='radius' name='title'></input>
   </view>
 
-  <button class="weui-btn" type="primary" bindtap="submitForm">提交</button>
+  <view class="cu-form-group margin-top">
+      <image class="viewVideoUpload" bindtap="addVideo" src="../../images/videoupload.png"></image>
+  </view>
+  <view class="cu-form-group margin-top">
+  <button class="viewUploadSubmit" type="primary" formType="submit">提交</button>
+  </view>
+
+  <view class="cu-form-group margin-top" hidden="{{!chooesVideo}}">
+    <view class='title'>已上传视频：</view>
+    <video  src="{{chooesVideo}}" ></video>
+  </view>
+
+  </form>
