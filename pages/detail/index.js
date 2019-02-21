@@ -3,6 +3,8 @@ const socket = require('../js/socket.js')
 const moveTime = 1000;
 Page({
   data: {
+    StatusBar: app.globalData.StatusBar,
+    CustomBar: app.globalData.CustomBar,
     videoPause:true,
     //config
     viewBoxWidth:44,
@@ -32,14 +34,16 @@ Page({
     typeIndexClick:{},
     otherPoint:0,
     waitUserPic: "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=4001431513,4128677135&fm=27&gp=0.jpg",
-    waitUserName: "???",
+    waitUserName: "等待加入",
+    videoUrl:"http://goumeng.oss-cn-hangzhou.aliyuncs.com/file/20181119/YY8GrasM8W.mp4"
   },
   onLoad(params){
     console.log("onLoad")
     var that = this;
     let id = params.id;
+    id = 12;
     wx.request({
-      url: 'http://yc.com:2017/?c=api/video/videoItem&id='+id,
+      url: 'http://47.94.147.93/?c=api/video/videoItem&id='+id,
       method: 'GET',
       header: {
         'content-type': 'application/x-www-form-urlencoded' // 默认值
@@ -50,7 +54,8 @@ Page({
         params.id = res.data.data.item.id;
         that.setData({
           videoItem: res.data.data.item,
-          params: params
+          params: params,
+          array: res.data.data.item.action,
         });
       }
     })
@@ -327,7 +332,7 @@ Page({
         return;
       }
       console.log(res)
-      console.log("res.width:" + res.width + " res.height:" + res.height)
+      console.log("res.width:" + res.width + " res.height:" + res.height + " that.data.videoHeight:" + that.data.videoHeight)
       if (that.data.videoHeight){
         that.setData({
           videoWidth: res.width,
@@ -339,21 +344,10 @@ Page({
         })
       }
       
-    }).exec()
-    //初始化行动点
-    var action = [{ "time": "1.4", "type": "left" },
-      { "time": "2.4", "type": "right" },
-      { "time": "3.4", "type": "top" },
-      { "time": "4.4", "type": "top" },
-      { "time": "5.4", "type": "top" },
-      { "time": "6.4", "type": "top" },
-      { "time": "7.4", "type": "top" },
-    ];
-
+    }).exec();
     var animationList = []
     var styleClass = []
     this.setData({
-      array: action,
       animationList: animationList,
       timeList:{},
       styleClass: styleClass,
@@ -365,10 +359,8 @@ Page({
   },
   //视频播放完的事件
   timeEnd(res){
-    if(this.data.endLock==true){
-      return;
-    }
-    this.setData({endLock:true})
+    //单人模式请求一个接口，不用websokct，还未实现
+    
     //先考虑多人
     console.log("video time end");
     //删除5s一次的定时器
@@ -569,6 +561,12 @@ Page({
       }
     }
   },
+  bindended(res){
+    clearInterval(this.data.timerPlay);
+    console.log("timeupdate bindended");
+    console.log(res.detail.currentTime)
+    this.timeEnd(res);
+  },
   //视频播放监听
   timeupdate(res){
     clearInterval(this.data.timerPlay);
@@ -576,10 +574,6 @@ Page({
     console.log(res.detail.currentTime)
     //console.log(res.detail.duration)
     if (this.data.videoPlay==false){
-      return;
-    }
-    if (res.detail.currentTime > (res.detail.duration-1) ){
-      this.timeEnd(res);
       return;
     }
     this.updateAnimation(res.detail.currentTime);
@@ -614,14 +608,21 @@ Page({
   },
   onShareAppMessage(res){
     console.log("onShareAppMessage")
-     //展示等待提示
-    this.videoWaitShow(true);
+    
     // 来自页面内转发按钮
     console.log(res)
     var app = getApp();
     return {
       title: '自定义转发标题:' + this.data.roomId + " id:" + this.data.params.id,
-      path: '/page/detail/index?fromuid=' + app.globalData.uid + "&id="+this.data.params.id
+      path: '/page/detail/index?fromuid=' + app.globalData.uid + "&id="+this.data.params.id,
+      success: (res) => {    // 成功后要做的事情
+        //展示等待提示
+        this.videoWaitShow(true);
+      },
+      fail: function (res) {
+        // 分享失败
+        console.log(res)
+      }
     }
   },
   end(){
@@ -634,6 +635,8 @@ Page({
     })
   },
   play() {
+    //先全屏
+    this.goFull();
     clearInterval(this.data.timerPlay);
     console.log("video play");
     this.videoCtx.play()
@@ -853,5 +856,12 @@ Page({
         
       }).exec()
       */
+  },
+  navigateBack(){
+    console.log("navigateBack");
+    wx.navigateBack({
+      delta: 1
+    }) 
   }
+
 })

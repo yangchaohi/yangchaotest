@@ -1,19 +1,21 @@
 {
   "pages":[
-    "pages/video/upload",
+"pages/video/upload",
     "pages/list/index",
-    "pages/index/index",
     "pages/detail/index",
+    "pages/index/index",
     "pages/match/index",
     "pages/logs/logs"
    
   ],
   "window":{
-    "backgroundTextStyle":"light",
+    "navigationStyle": "custom",
+    "backgroundTextStyle":"dark",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "喵爪",
     "navigationBarTextStyle":"black"
   },
+  "component": true,
   "tabBar": {
     "list": [
       {
@@ -39,12 +41,6 @@
         "text": "匹配",
         "iconPath": "images/pipei_i.png",
         "selectedIconPath": "images/pipei_s.png"
-      },
-      {
-        "pagePath": "pages/detail/index",
-        "text": "随便看",
-        "iconPath": "images/rand_i.png",
-        "selectedIconPath": "images/rand_s.png"
       }
     ]
   }

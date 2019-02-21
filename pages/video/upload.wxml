@@ -1,20 +1,112 @@
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+  <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view style="margin:auto;text-algin:center;" class='action' bindtap="navigateBack" delta="1" hover-class="none">
+      <view class='title'>视频投稿</view> 
+    </view>
+  </view>
+</view>
 
 <form bindsubmit="formSubmit">
-  <view class="cu-form-group margin-top">
-    <view class='title'>视频标题</view>
+  <view class="cu-form-group">
+    <view class='title'>标题</view>
     <input placeholder="最长50字" maxlength="50" value="{{title}}" class='radius' name='title'></input>
   </view>
 
-  <view class="cu-form-group margin-top">
-      <image class="viewVideoUpload" bindtap="addVideo" src="../../images/videoupload.png"></image>
+  <view id="videoDesc" class="cu-form-group" hidden="{{videoUrl}}">
+     <!--  <view class='title'>上传视频</view>-->
+       <view><image class="viewVideoUpload" bindtap="addVideo" src="../../images/videoupload.png"></image>
+       <view class="viewVideoUploadText">+视频</view>
+       </view>
   </view>
-  <view class="cu-form-group margin-top">
+  <view  class="cu-form-group" hidden="{{!videoUrl}}">
+    <view class='title'>已上传视频自动生成动画中：</view>
+  </view>
+  <view class="cu-form-group">
+     <video id="myVideo" 
+     bindtimeupdate="timeupdate"
+     bindended="bindended"
+     controls="{{false}}" class="videoSetClick" src="{{videoUrl}}"
+     style="height:{{videoHeight}}px;"
+      >
+      <cover-view class="controls">
+        <cover-view   bindtap="viewclick" data-type="left"   class="viewLeftButton" ></cover-view>
+        <cover-view   bindtap="viewclick" data-type="right"  class="viewRightButton" ></cover-view>
+        <cover-view   bindtap="viewclick" data-type="top"  class="viewTopButton" ></cover-view>
+        <cover-view    bindtap="viewclick" data-type="bottom"  class="viewBottomButton" ></cover-view>
+
+        <cover-view bindtap="play" hidden="{{!videoInit}}"  class="videoStart">开始</cover-view>
+        <cover-view bindtap="restart"  hidden="{{!videoPlay}}"  class="videoReStart">重设</cover-view>
+        <cover-view class='viewPointBox'>
+          <cover-view class="videoPoint">动作个数：{{point}}</cover-view>
+        </cover-view>
+
+
+        <cover-view  class="videoEndView"  hidden='{{!videoEnd}}'>
+        <cover-view class="videoStopTop"></cover-view>
+          <cover-view class="videoStopText">
+            <cover-view class="videoStopTextItem">设置动作</cover-view>
+            <cover-view class="videoStopTextItem">视频时间:{{videoTime}}秒</cover-view>
+            <cover-view class="videoStopTextItem">动作个数：{{point}}</cover-view>
+          </cover-view>
+          <cover-view class="videoStopButtonView">
+            <cover-view class="videoStopButtonBox">
+              <cover-view bindtap="restart" class="videoStopButton">重设</cover-view>
+            </cover-view>
+          </cover-view>
+        </cover-view>
+
+
+
+      </cover-view>
+     
+
+
+     </video>
+     
+    
+  </view>
+  
+
+  <view class="cu-form-group">
   <button class="viewUploadSubmit" type="primary" formType="submit">提交</button>
   </view>
 
-  <view class="cu-form-group margin-top" hidden="{{!chooesVideo}}">
-    <view class='title'>已上传视频：</view>
-    <video  src="{{chooesVideo}}" ></video>
+  <view class="cu-bar solid-bottom">
+    <view class='viewHistoryText'>
+      历史记录
+    </view>
   </view>
+  <view class="cu-list menu">
 
+     <view class="cu-item" wx:key="unique" wx:for-index="i"  wx:for="{{videoList}}">
+      <view class='content'>
+        <text class='icon-btn text-green'></text>
+        <text class='text-grey'>{{item.title}}</text>
+      </view>
+      <view class='action'>
+        <button bindtap="preView" data-id="{{item.id}}" class='cu-btn bg-green shadow'>
+          预览</button>
+      </view>
+      <view class='action'>
+        <button class='cu-btn bg-red shadow'>
+          删除</button>
+      </view>
+    </view>
+
+
+    <view class="cu-item">
+      <view class='content'>
+        <text class='icon-btn text-green'></text>
+        <text class='text-grey'>按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮按钮</text>
+      </view>
+      <view class='action'>
+        <button class='cu-btn bg-green shadow'>
+          预览</button>
+      </view>
+      <view class='action'>
+        <button class='cu-btn bg-red shadow'>
+          删除</button>
+      </view>
+    </view>
+  </view>
   </form>

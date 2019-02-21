@@ -4,6 +4,8 @@ const app = getApp()
 const socket = require('../js/socket.js')
 Page({
   data: {
+    StatusBar: app.globalData.StatusBar,
+    CustomBar: app.globalData.CustomBar,
     talkMessage:[],
     talkMessagePreView:[],
     noPreMessage: true,
@@ -27,7 +29,7 @@ Page({
   },
   bindDetailTap: function () {
     wx.navigateTo({
-      url: '../detail/index?id=333'
+      url: '../detail/index'
     })
   },
   

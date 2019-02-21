@@ -1,27 +1,54 @@
+
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+  <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view style="margin:auto;text-algin:center;" class='action' bindtap="navigateBack" delta="1" hover-class="none">
+      <view class='title'>发现</view> 
+    </view>
+  </view>
+</view>
+
+ <view class="weui-navbar">
+    <block wx:for="{{tabs}}" wx:key="*this">
+        <view id="{{index}}" class="weui-navbar__item {{activeIndex == index ? 'weui-bar__item_on' : ''}}" bindtap="tabClick">
+            <view class="weui-navbar__title">{{item}}</view>
+        </view>
+    </block>
+    <view class="weui-navbar__slider" style="left: {{sliderLeft}}px; transform: translateX({{sliderOffset}}px); -webkit-transform: translateX({{sliderOffset}}px);"></view>
+</view>
+
+
 <view style="display:none">
   <image wx:for="{{images}}" wx:key="id" id="{{item.id}}" src="{{item.pic}}" bindload="onImageLoad"></image>
 </view>
 <scroll-view scroll-y="true" style="height:{{scrollH}}px" bindscrolltolower="loadImages">
   <view style="width:100%">
     <view class="img_item">
-      <view bindtap='viewClick' class="viewBox" data-id="{{item.pic}}"  wx:for="{{col1}}" wx:key="id">
+      <view bindtap='viewClick' class="viewBox" data-id="{{item.id}}"  wx:for="{{col1}}" wx:key="id">
         <image src="{{item.pic}}" style="width:100%;height:{{item.height}}px"></image>
-        <view class="viewTitle">标题表标题表标题表标题表标题表标题表标题表</view>
+        <view class="viewTime"  style="top:{{item.height-20}}px">时长:{{item.time}}</view>
+        <view class="viewTime"  style="top:{{item.height-60}}px">最高得分:{{item.max_point}}</view>
+        <view class="viewTime"  style="top:{{item.height-40}}px">我的战绩:{{item.my_point}}</view>
+        
+        <view class="viewTitle">{{item.title}}</view>
         <view class="viewInfo">
-          <view class="viewUser">名字名字</view>
+          <view class="viewUser">{{item.username}}</view>
           <view class="viewLike">
-          23330</view>
+          {{item.user_like}}</view>
         </view>
       </view>
     </view>
     <view class="img_item">
-      <view bindtap='viewClick' class="viewBox" data-id="{{item.pic}}" wx:for="{{col2}}" wx:key="id">
+      <view bindtap='viewClick' class="viewBox" data-id="{{item.id}}" wx:for="{{col2}}" wx:key="id">
         <image src="{{item.pic}}" style="width:100%;height:{{item.height}}px"></image>
-        <view class="viewTitle">标题表标题表标题表标题表标题表标题表标题表</view>
+         <view class="viewTime"  style="top:{{item.height-20}}px">时长:{{item.time}}</view>
+         <view class="viewTime"  style="top:{{item.height-60}}px">最高得分:{{item.max_point}}</view>
+        <view class="viewTime"  style="top:{{item.height-40}}px">我的战绩:{{item.my_point}}</view>
+        
+         <view class="viewTitle">{{item.title}}</view>
         <view class="viewInfo">
-          <view class="viewUser">名字名字</view>
+          <view class="viewUser">{{item.username}}</view>
           <view class="viewLike">
-          23330</view>
+          {{item.user_like}}</view>
         </view>
       </view>
     </view>

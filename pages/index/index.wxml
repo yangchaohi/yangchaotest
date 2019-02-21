@@ -1,3 +1,11 @@
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+  <view class="cu-bar fixed" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view style="margin:auto;text-algin:center;" class='action' bindtap="navigateBack" delta="1" hover-class="none">
+      <view class='title'>喵爪</view> 
+    </view>
+</view>
+
+</view>
 <!--talk wxml-->
 <view bindtap='showTalkBox' class="viewTalkToggle">
   <image  class="viewTalkToggleImg" src="../../images/comment.png"></image>
@@ -44,7 +52,7 @@
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      <text bindtap="bindDetailTap" class="userinfo-nickname">{{userInfo.nickName}}</text>
 
     </block>
   </view>

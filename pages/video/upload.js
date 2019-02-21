@@ -6,6 +6,10 @@ Page({
    * 页面的初始数据
    */
   data: {
+    StatusBar: app.globalData.StatusBar,
+    CustomBar: app.globalData.CustomBar,
+    videoHeight:0,
+    //videoUrl:"http://goumeng.oss-cn-hangzhou.aliyuncs.com/file/20181119/YY8GrasM8W.mp4"
 
   },
 
@@ -13,16 +17,70 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var that = this;
+    wx.request({
+      url: 'http://' + app.globalData.doamin + '/?c=api/video/videoList&openId=' + app.globalData.openId,
+      method: 'get',
+      header: {
+        'content-type': 'application/x-www-form-urlencoded' // 默认值
+      },
+      success: function (res) {
+        console.log("videoList")
+        console.log(res)
+        let videoList = res.data.data.list;
+        console.log("videoList", videoList);
+        that.setData({
+          videoList: videoList
+        });
+        // 可以返回前端需要的用户信息（包括unionid、openid、user_id等）
+      }
+    });
 
+  },
+  
+  preView(res){
+    console.log("preView");
+   
+    let id = res.currentTarget.dataset.id;
+    console.log(id);
+    wx.redirectTo({
+      url: '../detail/index?id=' + id
+    })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
+    this.videoCtx = wx.createVideoContext('myVideo');
+    this.init();
 
+    var that = this;
+    wx.getSystemInfo({
+      success: function (res) {
+        console.log("getSystemInfo")
+        console.log(res);
+        that.setData({
+          windowHeight: (res.windowHeight),
+        })
+      }
+    });
+   
+   
   },
+  setVideoHeight(){
+    const query = wx.createSelectorQuery();
+    var that = this ;
+    query.select('#videoDesc').boundingClientRect(function (res) {
+      let windowHeight = that.data.windowHeight;
+      console.log("myVideo")
+      console.log(windowHeight + "_" + res.bottom)
+      that.setData({
+        videoHeight: windowHeight - res.bottom - 50
+      });
 
+    }).exec();
+  },
   /**
    * 生命周期函数--监听页面显示
    */
@@ -126,7 +184,7 @@ Page({
     var this_ = this;
     //【1】获取oss信息
     wx.request({
-      url: 'http://yc.com:2017/lib/ossh5/php/get.php',
+      url: 'http://47.94.147.93/lib/ossh5/php/get.php',
       data: {
         fileSize: fileSize
       },
@@ -177,7 +235,8 @@ Page({
               if (res.statusCode == 200) {
                 //上传成功
                 //访问地址
-                this.setData({ videoUrl: uploadUrl + "/" + fPath})
+                this.setVideoHeight()
+                this.setData({ videoUrl: uploadUrl + "/" + fPath});
                 wx.showToast({
                   title: '上传成功',
                   icon: 'success',
@@ -239,6 +298,9 @@ Page({
     let videoUrl = this.data.videoUrl;
     let title = e.detail.value.title;
     let openId = app.globalData.openId;
+    let action = this.data.action;
+    let videoTime = this.data.videoTime;
+
     if (!openId){
       wx.showToast({
         title: "未登录",
@@ -266,6 +328,24 @@ Page({
       })
       return false;
     }
+    if (!videoTime) {
+      wx.showToast({
+        title: "视频时间异常",
+        icon: 'none',
+        duration: 1000 * 2,
+        mask: true
+      })
+      return false;
+    }
+    if (!action) {
+      wx.showToast({
+        title: "未设置动作",
+        icon: 'none',
+        duration: 1000 * 2,
+        mask: true
+      })
+      return false;
+    }
 
     wx.request({
       url: "http://47.94.147.93/?c=api/video/postVideo", 
@@ -273,7 +353,7 @@ Page({
         'content-type': 'application/x-www-form-urlencoded' // 默认值
       },
       method: 'POST',
-      data: { title: title, videoUrl: videoUrl,openId:openId},
+      data: { title: title, videoUrl: videoUrl, openId: openId, action: JSON.stringify(action), videoTime: videoTime},
       success: function (res) {
         console.log(res)
         if (res.data.status == 0) {
@@ -290,10 +370,15 @@ Page({
               icon: 'success',
               duration: 1500
             })
+            let videoList = that.data.videoList;
+            if (res.data.data.item){
+              videoList.unshift(res.data.data.item);
+            }
+            
             that.setData({
-              chooesVideo: videoUrl,
               title: "",
               videoUrl: "",
+              videoList: videoList
             })
           }else{
             wx.showToast({
@@ -308,6 +393,91 @@ Page({
       }
     })
     
+  },
+  play() {
+    clearInterval(this.data.timerPlay);
+    console.log("video play");
+    this.videoCtx.play()
+    this.setData({
+      videoInit: false,
+      videoPlay: true,
+      videoPause: false,
+      videoEnd: false,
+      action:[],
+      point:0,
+    });
+  },
+  end() {
+    clearInterval(this.data.timerPlay);
+    this.setData({
+      videoInit: false,
+      videoPlay: false,
+      videoPause: false,
+      videoEnd: true,
+    })
+  },
+  restart() {
+    clearInterval(this.data.timerPlay);
+    console.log("video restart");
+    this.videoCtx.pause();
+    this.videoCtx.seek(0);
+    //清理积分
+    this.init();
+  },
+  bindended(res) {
+    clearInterval(this.data.timerPlay);
+    console.log("timeupdate bindended");
+    console.log(res.detail.currentTime)
+    this.setData({ videocurrentTime: 0});
+    this.end();
+  },
+  //视频播放监听
+  timeupdate(res) {
+    clearInterval(this.data.timerPlay);
+    console.log("timeupdate");
+    console.log(res.detail.currentTime);
+    this.setData({ 
+      videocurrentTime: res.detail.currentTime,
+      videoTime: res.detail.duration
+     });
+    if (this.data.videoPlay == false) {
+      return;
+    }
+    var timeLast = res.detail.currentTime;
+    var that = this;
+    that.setData({
+      timerPlay: setInterval(function () {
+        timeLast = timeLast + 0.1;
+        console.log("timeLast:" + timeLast);
+        that.setData({ videocurrentTime: timeLast});
+      }, 100)
+    });
+  },
+  init() {
+    this.setData({
+      videoInit: true,
+      videoPlay: false,
+      videoPause: false,
+      videoEnd: false,
+      point: 0
+    });
+  },
+  viewclick(res) {
+    console.log("viewclick res:")
+    console.log(res)
+    var type = res.target.dataset.type;
+    let action = this.data.action;
+    if(!action){
+      action=[];
+    }
+    let actionItem = {};
+    actionItem['type'] = type;
+    actionItem['time'] = this.data.videocurrentTime;
+    action.push(actionItem);
+    this.setData({ 
+      action: action,
+      point:action.length
+    });
+    console.log(action);
   }
-
 })

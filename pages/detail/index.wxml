@@ -1,13 +1,21 @@
-
+<view class="cu-custom" style="height:{{CustomBar}}px;">
+  <view class="cu-bar fixed gradual-blue" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
+    <view class='action' bindtap="navigateBack" delta="1" hover-class="none">
+      <view class='icon-back'>卡片</view> 
+    </view>
+  </view>
+</view>
 
 <video 
   class="videoBox"
   id="myVideo"
-  src="http://goumeng.oss-cn-hangzhou.aliyuncs.com/file/20181119/YY8GrasM8W.mp4"
   controls="{{false}}"
+  src="{{videoUrl}}"
+  
   event-model="bubble"
   bindfullscreenchange='fullscreenchange'
   bindtimeupdate="timeupdate"
+  bindended="bindended"
 >
   <cover-view class="controls">
 
@@ -121,10 +129,20 @@ bindtransitionend="animationend"
   </cover-view>
   
   <cover-view wx:if="{{isSinglePlay==true}}" class="videoEndView" hidden='{{!videoEnd||closeVideoEnd}}' >
-   <cover-view class="videoStopTop"></cover-view>
-    <cover-view class="videoStopText">
-      <cover-view class="videoStopTextItem">单人模式 {{winTitle}}</cover-view>
-      <cover-view class="videoStopTextItem">{{titlePoint}}</cover-view>
+    <cover-view class="videoEndText">
+      <cover-view class="videoStopTextItem">P:20000</cover-view>
+       <cover-view class="videoStopTextItem">恭喜你打败了20%的用户
+       获得称号</cover-view>
+       <cover-view class="videoStopTextItem">大神</cover-view>
+
+         <cover-view class="videoStopTextItem">分享到微信好友</cover-view>
+       <cover-view class="videoStopTextItem">分享到朋友圈</cover-view>
+       
+        <cover-view class="videoStopTextItem">首页，再来一局 排行榜</cover-view>
+       
+        <cover-view class="videoStopTextItem">20000分数</cover-view>
+      <cover-view wx:if="{{titlePoint}}" class="videoStopTextItem">{{titlePoint}}</cover-view>
+      <cover-view wx:if="{{!titlePoint}}" class="videoStopTextItem">当前得分：{{point}}</cover-view>
       <cover-view class="videoStopTextItem">{{titleNear}}</cover-view>
     </cover-view>
     <cover-view class="videoStopButtonView">
