@@ -1,8 +1,9 @@
 {
   "pages":[
-"pages/video/upload",
+
     "pages/list/index",
     "pages/detail/index",
+    "pages/video/upload",
     "pages/index/index",
     "pages/match/index",
     "pages/logs/logs"

@@ -859,9 +859,12 @@ Page({
   },
   navigateBack(){
     console.log("navigateBack");
-    wx.navigateBack({
-      delta: 1
-    }) 
+    console.log(__wxConfig.pages)
+    let pages = getCurrentPages();
+    if (pages.length < 2 ) {
+      wx.reLaunch({ url: '/pages/list/index' })
+    } else {
+      wx.navigateBack({ delta: 1 });
+    }
   }
-
 })

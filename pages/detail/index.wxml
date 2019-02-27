@@ -1,7 +1,7 @@
 <view class="cu-custom" style="height:{{CustomBar}}px;">
   <view class="cu-bar fixed gradual-blue" style="height:{{CustomBar}}px;padding-top:{{StatusBar}}px;">
     <view class='action' bindtap="navigateBack" delta="1" hover-class="none">
-      <view class='icon-back'>卡片</view> 
+      <view class='icon-back'>返回</view> 
     </view>
   </view>
 </view>

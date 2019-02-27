@@ -21,7 +21,7 @@
   <view  class="cu-form-group" hidden="{{!videoUrl}}">
     <view class='title'>已上传视频自动生成动画中：</view>
   </view>
-  <view class="cu-form-group">
+  <view >
      <video id="myVideo" 
      bindtimeupdate="timeupdate"
      bindended="bindended"
